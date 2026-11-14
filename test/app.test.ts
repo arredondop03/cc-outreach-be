@@ -33,3 +33,15 @@ test('public sign-up is rejected', async () => {
   assert.equal(res.status, 400);
   assert.equal(((await res.json()) as { code: string }).code, 'EMAIL_PASSWORD_SIGN_UP_DISABLED');
 });
+
+test('GET /openapi.json requires a session', async () => {
+  const res = await fetch(`${base}/openapi.json`);
+  assert.equal(res.status, 401);
+});
+
+test('X-Request-Id: valid client ID is echoed, invalid one is replaced', async () => {
+  const ok = await fetch(`${base}/health`, { headers: { 'x-request-id': 'abc-123' } });
+  assert.equal(ok.headers.get('x-request-id'), 'abc-123');
+  const bad = await fetch(`${base}/health`, { headers: { 'x-request-id': 'x'.repeat(65) } });
+  assert.notEqual(bad.headers.get('x-request-id'), 'x'.repeat(65));
+});

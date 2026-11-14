@@ -36,9 +36,9 @@ Move this file into the backend repo when you create it. It holds every API, dat
 - [ ] 3.3 Generate auth models and run the migration (`npx auth@latest generate --config src/lib/auth.ts`, `npx prisma migrate dev`).
 - [ ] 3.4 `npm run seed:admin` creates the single admin user (`scripts/seed-admin.ts`).
 - [x] 3.5 CORS limited to `FRONTEND_ORIGIN` with `credentials: true`; Better Auth checks `trustedOrigins` for CSRF.
-- [x] 3.6 `requireAuth` middleware (`src/middleware/requireAuth.ts`). Mount it on everything except `/health`, `/api/auth/*`, `/openapi.json`, and the Apify webhook.
+- [x] 3.6 `requireAuth` middleware (`src/middleware/requireAuth.ts`). Mount it on everything except `/health`, `/api/auth/*`, and the Apify webhook. (`/openapi.json` is also behind it.)
 - [x] 3.7 Auth endpoints documented in `src/openapi.ts` via `src/routes/auth.ts`.
-- [ ] 3.8 Verify: wrong password, sign-up disabled, sign-out invalidates the session, no cookie gets 401 from `requireAuth`. (Better Auth rate-limits auth routes by default.)
+- [ ] 3.8 Verify: wrong password, sign-up disabled, sign-out invalidates the session, no cookie gets 401 from `requireAuth`. (Login is limited to 5 attempts per minute via `rateLimit` in `src/lib/auth.ts`; also confirm the 6th attempt returns 429.)
 
 **Done when:** the API refuses everything except requests carrying your valid session cookie.
 
@@ -139,6 +139,7 @@ The core logic. Keep it in one module with no HTTP in it, so it is easy to test.
 - [ ] 12.5 Buy or use a custom domain and attach both services as subdomains (`api.` and `app.`), so the cookie is first-party and `SameSite=Lax` works. Set `SESSION_COOKIE_DOMAIN` and the CORS origin accordingly.
 - [ ] 12.6 Point the Apify webhook at the deployed API.
 - [ ] 12.7 Back up the database (Railway backups or a periodic `pg_dump`).
+- [ ] 12.8 Behind Railway's proxy, set `app.set('trust proxy', 1)` in `src/app.ts`, and set `advanced.ipAddress.ipAddressHeaders` in `src/lib/auth.ts` to the header Railway's proxy always overwrites (confirm which one in Railway's docs), so the login rate limit can't be dodged with a spoofed `X-Forwarded-For`. Verify the deployed API logs the real client IP and that the 6th sign-in attempt in a minute returns 429.
 
 ## Phase 13: Hardening
 
