@@ -33,3 +33,8 @@ test('public sign-up is rejected', async () => {
   assert.equal(res.status, 400);
   assert.equal(((await res.json()) as { code: string }).code, 'EMAIL_PASSWORD_SIGN_UP_DISABLED');
 });
+
+test('GET /openapi.json requires a session', async () => {
+  const res = await fetch(`${base}/openapi.json`);
+  assert.equal(res.status, 401);
+});

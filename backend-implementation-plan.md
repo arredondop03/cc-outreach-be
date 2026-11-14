@@ -139,6 +139,7 @@ The core logic. Keep it in one module with no HTTP in it, so it is easy to test.
 - [ ] 12.5 Buy or use a custom domain and attach both services as subdomains (`api.` and `app.`), so the cookie is first-party and `SameSite=Lax` works. Set `SESSION_COOKIE_DOMAIN` and the CORS origin accordingly.
 - [ ] 12.6 Point the Apify webhook at the deployed API.
 - [ ] 12.7 Back up the database (Railway backups or a periodic `pg_dump`).
+- [ ] 12.8 Behind Railway's proxy, set `app.set('trust proxy', 1)` in `src/app.ts`, and set `advanced.ipAddress.ipAddressHeaders` in `src/lib/auth.ts` to the header Railway's proxy always overwrites (confirm which one in Railway's docs), so the login rate limit can't be dodged with a spoofed `X-Forwarded-For`. Verify the deployed API logs the real client IP and that the 6th sign-in attempt in a minute returns 429.
 
 ## Phase 13: Hardening
 
