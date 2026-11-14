@@ -6,8 +6,8 @@ export const requestLogger = pinoHttp({
   logger,
   genReqId: (req, res) => {
     const existing = req.headers['x-request-id'];
-    if (typeof existing === 'string' && existing) return existing;
-    const id = randomUUID();
+    // Client-supplied IDs are accepted only if short and plain, so they can't bloat or confuse logs.
+    const id = typeof existing === 'string' && /^[\w-]{1,64}$/.test(existing) ? existing : randomUUID();
     res.setHeader('X-Request-Id', id);
     return id;
   },
