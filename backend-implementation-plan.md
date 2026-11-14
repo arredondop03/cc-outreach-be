@@ -36,9 +36,9 @@ Move this file into the backend repo when you create it. It holds every API, dat
 - [ ] 3.3 Generate auth models and run the migration (`npx auth@latest generate --config src/lib/auth.ts`, `npx prisma migrate dev`).
 - [ ] 3.4 `npm run seed:admin` creates the single admin user (`scripts/seed-admin.ts`).
 - [x] 3.5 CORS limited to `FRONTEND_ORIGIN` with `credentials: true`; Better Auth checks `trustedOrigins` for CSRF.
-- [x] 3.6 `requireAuth` middleware (`src/middleware/requireAuth.ts`). Mount it on everything except `/health`, `/api/auth/*`, `/openapi.json`, and the Apify webhook.
+- [x] 3.6 `requireAuth` middleware (`src/middleware/requireAuth.ts`). Mount it on everything except `/health`, `/api/auth/*`, and the Apify webhook. (`/openapi.json` is also behind it.)
 - [x] 3.7 Auth endpoints documented in `src/openapi.ts` via `src/routes/auth.ts`.
-- [ ] 3.8 Verify: wrong password, sign-up disabled, sign-out invalidates the session, no cookie gets 401 from `requireAuth`. (Better Auth rate-limits auth routes by default.)
+- [ ] 3.8 Verify: wrong password, sign-up disabled, sign-out invalidates the session, no cookie gets 401 from `requireAuth`. (Login is limited to 5 attempts per minute via `rateLimit` in `src/lib/auth.ts`; also confirm the 6th attempt returns 429.)
 
 **Done when:** the API refuses everything except requests carrying your valid session cookie.
 
