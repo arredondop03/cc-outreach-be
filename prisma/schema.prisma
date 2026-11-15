@@ -69,3 +69,30 @@ model Verification {
   @@index([identifier])
   @@map("verifications")
 }
+
+enum CompanyHiringRole {
+  fe
+  fs
+}
+
+enum CompanyStatus {
+  new
+  ready_for_sequence
+  active
+  archived
+}
+
+model Company {
+  id          String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt   DateTime           @default(now()) @map("created_at") @db.Timestamptz
+  name        String             @unique
+  domain      String             @unique
+  summary     String?
+  logoUrl     String?            @map("logo_url")
+  jobPostUrl  String?            @map("job_post_url")
+  role        CompanyHiringRole
+  status      CompanyStatus
+  linkedinUrl String             @map("linkedin_url")
+
+  @@map("companies")
+}

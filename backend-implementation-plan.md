@@ -17,7 +17,7 @@ Move this file into the backend repo when you create it. It holds every API, dat
 
 - [ ] 2.1 Add a `postgres` service (with a named volume) to `docker-compose.yml` for local dev. Install Prisma with a single `DATABASE_URL` and add it to `src/env.ts` and `.env.example`. Confirm it connects.
 - [ ] 2.2 Model `User` (email unique, password hash) and `Session` (hashed token unique, user ID, created, last seen, expires; index on expiry).
-- [ ] 2.3 Model `Company`: LinkedIn URL, name, status enum (`new`, `ready_for_sequence`, `active`, `archived`), enrichment fields.
+- [x] 2.3 Model `Company`: LinkedIn URL, name, status enum (`new`, `ready_for_sequence`, `active`, `archived`), enrichment fields.
 - [ ] 2.4 Model `Contact`: company, name, role, email, LinkedIn URL, status enum (`new`, `in_sequence`, `engaged`, `done`, `never_contacted`), source.
 - [ ] 2.5 Model `FollowUp`: contact, step number, channel, `due_date`, status enum (`pending`, `completed`, `wont_do`), plus draft `subject` and `body` (SendGrid has no drafts, so the draft lives here).
 - [ ] 2.6 Model `Interaction`: contact, direction (inbound/outbound), channel, body, timestamp, optional link to the follow-up. Add nullable `messageId` (the RFC `Message-ID` of a sent email) for threading, and `sendgridMessageId` if useful for debugging.
@@ -44,7 +44,7 @@ Move this file into the backend repo when you create it. It holds every API, dat
 
 ## Phase 4: Companies and contacts CRUD
 
-- [ ] 4.1 Zod schemas and routes to create, read, update, and delete companies.
+- [x] 4.1 Zod schemas and routes to create, read, update, and delete companies.
 - [ ] 4.2 The same for contacts, scoped by company.
 - [ ] 4.3 Company status rules (`ready_for_sequence` when a contact is `new`, `active` when one is `in_sequence`), as a single function used by every route that changes contacts.
 - [ ] 4.4 Archive a company inside one transaction: contacts to `done` or `never_contacted`, pending follow-ups to `completed` or `wont_do`.

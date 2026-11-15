@@ -9,6 +9,7 @@ import { requestLogger } from './middleware/requestLogger.js';
 import { requireAuth } from './middleware/requireAuth.js';
 import { generateOpenApiDocument } from './openapi.js';
 import './routes/auth.js';
+import { companiesRouter } from './routes/companies.js';
 import { healthRouter } from './routes/health.js';
 
 export function createApp() {
@@ -22,6 +23,7 @@ export function createApp() {
   app.use(express.json({ limit: '100kb' }));
 
   app.use(healthRouter);
+  app.use(companiesRouter);
 
   // Generated once, after all routes have registered their paths.
   const openApiDocument = generateOpenApiDocument();

@@ -1,5 +1,6 @@
 import type { ErrorRequestHandler, RequestHandler } from 'express';
 import { ZodError } from 'zod';
+import { Prisma } from '../generated/prisma/client.js';
 import { HttpError } from '../lib/errors.js';
 
 export const notFound: RequestHandler = (req, res) => {
@@ -12,6 +13,17 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   if (err instanceof ZodError) {
     res.status(400).json({ error: { message: 'Validation failed', details: err.issues } });
     return;
+  }
+
+  if (err instanceof Prisma.PrismaClientKnownRequestError) {
+    if (err.code === 'P2002') {
+      res.status(409).json({ error: { message: 'Already exists', details: err.meta } });
+      return;
+    }
+    if (err.code === 'P2025') {
+      res.status(404).json({ error: { message: 'Not found' } });
+      return;
+    }
   }
 
   if (err instanceof HttpError) {
