@@ -27,7 +27,7 @@ export function createApp() {
 
   // Generated once, after all routes have registered their paths.
   const openApiDocument = generateOpenApiDocument();
-  app.get('/openapi.json', requireAuth, (_req, res) => {
+  app.get('/openapi.json', (_req, res) => {
     res.json(openApiDocument);
   });
 
